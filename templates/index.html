@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NASA Dynamic Gallery 🚀</title>
+  <style>
+    body { 
+      font-family: Arial; 
+      background: black; 
+      color: white; 
+      text-align: center; 
+      margin: 0; 
+      padding: 0;
+    }
+    h1 { margin-top: 20px; }
+    #controls {
+      margin-top: 20px;
+    }
+    #search { 
+      padding: 10px; 
+      font-size: 16px; 
+      width: 300px; 
+      border-radius: 6px;
+      border: none;
+    }
+    button { 
+      padding: 10px 15px; 
+      font-size: 16px; 
+      cursor: pointer; 
+      border: none;
+      border-radius: 6px;
+      background: #222;
+      color: white;
+    }
+    button:hover {
+      background: yellow;
+      color: black;
+    }
+    #thumbs { 
+      display: flex; 
+      flex-wrap: wrap; 
+      justify-content: center; 
+      margin-top: 20px; 
+      gap: 20px;
+    }
+    #thumbs img { 
+      max-width: 100%;
+      height: auto;
+      border: 2px solid white; 
+      border-radius: 10px;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    #thumbs img:hover { 
+      border-color: yellow; 
+      transform: scale(1.02);
+    }
+    .image-container {
+      width: 90%;
+      max-width: 1000px;
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>NASA Dynamic Gallery 🌌</h1>
+  <div id="controls">
+    <input type="text" id="search" placeholder="Search for galaxies, planets, nebulas...">
+    <button onclick="searchImages()">Search</button>
+  </div>
+  <div id="thumbs"></div>
+
+  <script>
+    async function loadImages(query = "galaxy") {
+      try {
+        const res = await fetch(`/get_images?q=${query}`);
+        const images = await res.json();
+        const thumbsDiv = document.getElementById("thumbs");
+        thumbsDiv.innerHTML = "";
+
+     images.forEach(img => {
+  const container = document.createElement("div");
+  container.className = "image-container";
+
+  const el = document.createElement("img");
+  el.src = img.url;       // original resolution
+  el.title = img.title;
+  el.alt = img.title;
+
+  // Click to open viewer
+  el.onclick = () => {
+    window.location = "/viewer?img=" + encodeURIComponent(img.url);
+  };
+
+  const caption = document.createElement("p");
+  caption.textContent = img.title;
+
+  container.appendChild(el);
+  container.appendChild(caption);
+  thumbsDiv.appendChild(container);
+});
+
+      } catch (err) {
+        console.error("Error loading images:", err);
+      }
+    }
+
+    function searchImages() {
+      const query = document.getElementById("search").value.trim();
+      if (query) loadImages(query);
+    }
+
+    // Initial load
+    loadImages();
+  </script>
+</body>
+</html>

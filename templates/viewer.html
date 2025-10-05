@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NASA Image Viewer 🌌</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
+  <style>
+    body { 
+      background: black; 
+      color: white; 
+      text-align: center; 
+      font-family: Arial; 
+      margin: 0; 
+    }
+    #viewer { 
+      width: 100%; 
+      height: 85vh; 
+      border: 2px solid white; 
+    }
+    #backBtn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #222;
+      color: white;
+      cursor: pointer;
+      z-index: 1000; /* stays on top of viewer */
+    }
+    #backBtn:hover {
+      background: yellow;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <button id="backBtn" onclick="window.history.back()">← Back</button>
+  <h2>Zoomable Image</h2>
+  <div id="viewer"></div>
+
+  <script>
+    const imgUrl = "{{ img_url }}";
+
+    // OpenSeadragon viewer
+    OpenSeadragon({
+      id: "viewer",
+      prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
+      tileSources: {
+        type: 'image',
+        url: imgUrl,
+        buildPyramid: false
+      }
+    });
+  </script>
+</body>
+</html>
